@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb_container
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongodb_data_container:/app
+    ports:
+      - 27017:${MONGO_PORT}
+
+  node:
+    build: ./
+    container_name: node_app_container
+    ports:
+      - 3001:${PORT}
+    platform: linux/x86_64
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_HOSTNAME=${MONGO_HOSTNAME}
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_DB=${MONGO_DB}
+
+volumes:
+  mongodb_data_container:
