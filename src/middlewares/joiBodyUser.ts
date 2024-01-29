@@ -1,5 +1,5 @@
 import joi from 'joi'
-import type IUser from '../interfaces/IUser'
+import type { IUser } from '../interfaces/IUser'
 
 const validateBodyUser = (body: IUser): IUser => {
   const userSchema = joi.object({
