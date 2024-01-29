@@ -1,6 +1,6 @@
 import type UserODM from '../../models/user/userODM'
 import { type IAuthInput } from '../../interfaces/IAuth'
-import { validateInputAuth } from '../../middlewares/joiInputAuth'
+import { validateInputAuth } from '../../middlewares/joiInputDataAuth'
 import bcryptJs from 'bcryptjs'
 import { generateToken } from '../../middlewares/token'
 
