@@ -3,6 +3,7 @@ import 'dotenv/config'
 import 'express-async-errors'
 import { Connection } from './config/connection'
 import userRouter from './router/user/userRouter'
+import authRouter from './router/auth/authRouter'
 
 class App {
   app: express.Express
@@ -20,6 +21,7 @@ class App {
     })
 
     this.app.use('/', userRouter)
+    this.app.use('/', authRouter)
 
     this.handleError()
   }
