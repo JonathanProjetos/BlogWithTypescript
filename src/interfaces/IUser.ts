@@ -1,8 +1,16 @@
 interface IUser {
-  _id?: string
+  id?: string
   email: string
   password: string
   displayName: string
 }
 
-export default IUser
+interface IUserResponseDelete {
+  acknowledged: boolean
+  deletedCount: number
+}
+
+export type {
+  IUser,
+  IUserResponseDelete
+}
