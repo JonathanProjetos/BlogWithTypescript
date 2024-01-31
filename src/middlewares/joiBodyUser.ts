@@ -5,17 +5,20 @@ const validateBodyUser = (body: IUser): IUser => {
   const userSchema = joi.object({
     displayName: joi.string().required().messages({
       'string.empty': '400|The "displayName" field cannot be empty.',
-      'any.required': '400|The "displayName" field is mandatory.'
+      'any.required': '400|The "displayName" field is mandatory.',
+      'string.base': '400|The "displayName" field cannot be of type number'
     }),
     email: joi.string().required().email().messages({
       'string.empty': '400|The "email" field cannot be empty.',
       'any.required': '400|The "email" field is mandatory.',
-      'string.email': '400|The "email" must be in the format test@test.com.'
+      'string.email': '400|The "email" must be in the format test@test.com.',
+      'string.base': '400|The "email" field cannot be of type number'
     }),
     password: joi.string().min(6).required().messages({
       'string.empty': '400|The "password" field cannot be empty.',
       'any.required': '400|The "password" field is mandatory.',
-      'string.min': '400|The "password" field must be at least 6 characters.'
+      'string.min': '400|The "password" field must be at least 6 characters.',
+      'string.base': '400|The "password" field cannot be of type number'
     })
   })
 
