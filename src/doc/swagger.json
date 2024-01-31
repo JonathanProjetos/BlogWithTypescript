@@ -1,0 +1,814 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Blog API",
+    "version": "1.0.0",
+    "description": "Blog API fornece recursos para autenticação de usuários e gerenciamento de usuários e posts. Alguns end-point estão protegidos por autenticação, para acessá-los é necessário gerar um token de acesso através do end-point /login. Para gerar o token de acesso é necessário informar um email e senha válidos. O token de acesso deve ser enviado no header da requisição no campo com o nome Authorize. Observação o token a ser enviado para o Authorize será esperado somente a string correspondente ao token."
+  },
+  
+  "paths" : {
+    "/login": {
+      "post": {
+        "summary": "Autenticação",
+        "description": "Autenticação de usuário",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json" : {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              },
+              "example": {
+                "email": "test@teste.com",
+                "password" : "1234567"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200": {
+            "description": "OK",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                  "token": {
+                    "type": "string"
+                    } 
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/users": {
+      "post": {
+        "summary": "Adiciona um novo usuário",
+        "description": "Adiciona novos usuários ao banco de dados",
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json" : {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "example": {
+                "displayName" : "Jhon-Jhon",
+                "email": "teste10@teste.com",
+                "password" : "1234567"
+              }
+            }
+          }
+        },  
+        "responses" : {
+          "200": {
+            "description": "OK",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": { 
+                    "result": {
+                    "$ref": "#/components/schemas/userResponse"
+                  }
+                 }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "put":{
+        "summary": "Atualiza os dados do usuário",
+        "description": "Este endpoint atualiza os dados do usuário pertencente a pessoa que estiver logada",
+        "security": [{ "bearerAuth": [] }],
+        "tags": [
+          "User"
+        ],
+
+        "parameters":[
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token de acesso",
+            "required": true,
+            "schema": {
+              "properties": {
+                "authorization": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do user",
+            "required": true
+          }
+        ],
+
+        "requestBody": {
+          "description": "Atualiza um usuário",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "example": {
+                "displayName": "jhon",
+                "email": "test@test.com",
+                "password": "123456789"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Atualizado com sucesso.",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref": "#/components/schemas/userResponse"
+                }
+              }
+            }
+          },
+
+          "404": {
+            "description": "User not found",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Busca o usuário pelo seu id",
+        "description": "Este endpoint busca um usuário pelo seu id",
+        "tags": [
+          "User"
+        ],
+        "parameters":[
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do usuário",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Busca realizada com sucesso.",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "$ref": "#/components/schemas/userResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+
+          "404": {
+            "description": "User not found",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta o usuário",
+        "description": "Este endpoint deleta o usuário que estiver logado",
+        "security": [{ "bearerAuth": [] }],
+        "tags": [
+          "User"
+        ],
+        "parameters":[
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token de acesso",
+            "required": true,
+            "schema": {
+              "properties": {
+                "authorization": {
+                  "type": "string"
+                }
+            
+              }
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do usuário",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Deletado com sucesso.",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "$ref": "#/components/schemas/userDeleteResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+
+          "401": {
+            "description": "Unauthorized",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+
+          "404": {
+            "description": "User not found",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/posts": {
+      "post": {
+        "summary": "Cria novos posts",
+        "description": "Cria novos posts vinculado ao usuário logado",
+        "security": [{ "bearerAuth": [] }],
+        "tags": [
+          "Posts"
+        ],
+
+        "parameters":[
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token de acesso",
+            "required": true,
+            "schema": {
+              "properties": {
+                "authorization": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do user",
+            "required": true
+          }
+        ],
+
+        "requestBody": {
+          "content": {
+            "application/json" : {
+              "schema": {
+                "$ref": "#/components/schemas/postInput"
+              },
+              "example": {
+                "title" : "Vai da tudo certooooo",
+                "content": "Com fé a em deus, tudo vai dar certo."
+              }
+            }
+          }
+        },  
+        "responses" : {
+          "200": {
+            "description": "OK",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": { 
+                    "result": {
+                    "$ref": "#/components/schemas/userResponse"
+                  }
+                 }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Lista todos os posts",
+        "description": "Retorna um array com todos os posts",
+        "tags": [
+          "Posts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/postResponse"
+                  }
+                }
+              }
+            }
+          },
+
+          "401": {
+            "description": "Unauthorized",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+
+          "404": {
+            "description": "Not Found",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/{id}": {
+      "get": {
+        "summary": "Busca o post pelo id",
+        "description": "Este endpoint busca um post pelo id",
+        "tags": [
+          "Posts"
+        ],
+        "parameters":[
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do post",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Busca realizada com sucesso.",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "$ref": "#/components/schemas/postResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+
+          "404": {
+            "description": "Post not found",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualiza os dados do post",
+        "description": "Este endpoint atualiza os dados do post pertencente a pessoa que estiver autenticada",
+        "security": [{ "bearerAuth": [] }],
+        "tags": [
+          "Posts"
+        ],
+
+        "parameters":[
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token de acesso",
+            "required": true,
+            "schema": {
+              "properties": {
+                "authorization": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do post",
+            "required": true
+          }
+        ],
+
+        "requestBody": {
+          "description": "Atualiza um usuário",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/inputPost"
+              },
+              "example": {
+                "title": "Um novo começo",
+                "content": "Vamos escrever uma nova história."
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Atualizado com sucesso.",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref": "#/components/schemas/postResponse"
+                }
+              }
+            }
+          },
+
+          "404": {
+            "description": "User not found / Post not found",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          
+          "401": {
+            "description": "Unauthorized",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deleta o post",
+        "description": "Este endpoint deleta o post vinculado ao usuário",
+        "security": [{ "bearerAuth": [] }],
+        "tags": [
+          "Posts"
+        ],
+        "parameters":[
+          {
+            "name": "token",
+            "in": "header",
+            "description": "Token de acesso",
+            "required": true,
+            "schema": {
+              "properties": {
+                "authorization": {
+                  "type": "string"
+                }
+            
+              }
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do post",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "Deletado com sucesso.",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "$ref": "#/components/schemas/deletePostResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+
+          "401": {
+            "description": "Unauthorized",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+
+          "404": {
+            "description": "User not found / Post not found",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "type": "object",
+                  "properties": {
+                    "menssage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "components" : {
+    "schemas" : {
+      "Auth" : {
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          }
+        }
+      },
+
+      "User":{
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+
+      "userResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+
+      "userDeleteResponse": {
+        "type": "object",
+        "properties": {
+          "acknowledged": {
+            "type": "boolean"
+          },
+          "deletedCount": {
+            "type": "integer"
+          }
+        }
+      },
+
+      "inputPost": {
+        "type":"object",
+
+        "properties": {
+          "title": {
+            "type": "string"
+            },
+          "content": {
+            "type": "string"
+            }
+        }
+      },
+
+      "postResponse":{
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "_id": {
+            "type": "string"
+          },
+          "published": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        }
+      },
+
+      "deletePostResponse": {
+        "type": "object",
+        "properties": {
+          "acknowledged": {
+            "type": "boolean"
+          },
+          "deletedCount": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+
+    "securitySchemes":{
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
