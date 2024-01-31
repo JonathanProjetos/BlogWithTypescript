@@ -4,6 +4,9 @@ import 'express-async-errors'
 import { Connection } from './config/connection'
 import userRouter from './router/user/userRouter'
 import authRouter from './router/auth/authRouter'
+import postRouter from './router/post/postRouter'
+import swagger from 'swagger-ui-express'
+import swaggerDocument from './doc/swagger.json'
 
 class App {
   app: express.Express
@@ -16,12 +19,10 @@ class App {
 
     this.connection = new Connection()
 
-    this.app.get('/', (_req: express.Request, res: express.Response) => {
-      res.status(200).json({ message: 'está funcionando' })
-    })
-
+    this.app.use('/doc', swagger.serve, swagger.setup(swaggerDocument))
     this.app.use('/', userRouter)
     this.app.use('/', authRouter)
+    this.app.use('/', postRouter)
 
     this.handleError()
   }
