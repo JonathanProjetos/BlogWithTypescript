@@ -1,5 +1,5 @@
 import { type Model, Schema, model } from 'mongoose'
-import type { IPostOutput, IPostIputWithIdUser } from '../../interfaces/IPost'
+import type { IPostOutput, IPostIputWithIdUser, IPostIput } from '../../interfaces/IPost'
 
 class PostODM {
   private readonly schema: Schema<IPostIputWithIdUser>
@@ -48,6 +48,24 @@ class PostODM {
 
   public async getPostById (id: string): Promise<IPostOutput | null> {
     return await this.model.findById({ _id: id })
+  }
+
+  public async getPostAndUpdate (id: string, body: IPostIput): Promise<IPostOutput | null> {
+    const { content, title } = body
+    return await this.model.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          title,
+          content
+        }
+      },
+      { new: true }
+    )
+  }
+
+  public async getPostAndDelete (id: string): Promise<IPostOutput | null> {
+    return await this.model.findOneAndDelete({ _id: id })
   }
 }
 
