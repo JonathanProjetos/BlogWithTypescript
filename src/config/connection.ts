@@ -1,27 +1,29 @@
 import 'dotenv/config'
-import mongoose from 'mongoose'
+import mongoose, { type ConnectOptions } from 'mongoose'
 
-export class Connection {
-  readonly USERNAME = process.env.MONGO_USERNAME
-  readonly PASSWORD = process.env.MONGO_PASSWORD
-  readonly HOSTNAME = process.env.MONGO_HOSTNAME
-  readonly DB_PORT = process.env.MONGO_PORT
-  readonly DB_NAME = process.env.MONGO_DB
-  readonly DB_DATABASE = process.env.MONGO_DB
+// const USERNAME = process.env.MONGO_USERNAME
+// const PASSWORD = process.env.MONGO_PASSWORD
+// const HOSTNAME = process.env.MONGO_HOSTNAME
+// const DB_PORT = process.env.MONGO_PORT
+const DB_NAME = process.env.MONGO_DB
+const DB_DATABASE = process.env.MONGO_DB
 
-  constructor () {
-    this.connect()
+const connectDb = async (): Promise<void> => {
+  // const DB_CONNECT = `mongodb://${this.USERNAME}:${this.PASSWORD}@${this.HOSTNAME}:${this.DB_PORT}`
+  const DB_CONNECT = 'mongodb://localhost:27017'
+
+  const options: ConnectOptions = {
+    dbName: DB_NAME
   }
 
-  public connect (): void {
-    const DB_CONNECT = `mongodb://${this.USERNAME}:${this.PASSWORD}@${this.HOSTNAME}:${this.DB_PORT}`
-    try {
-      void mongoose.connect(DB_CONNECT, {
-        dbName: this.DB_DATABASE
-      })
-      console.log(`Conectado ao banco de dados: ${this.DB_DATABASE}`)
-    } catch (err) {
-      console.error('Erro ao conectar ao banco de dados:', err)
-    }
+  try {
+    await mongoose.connect(DB_CONNECT, options)
+    console.log(`Conectado ao banco de dados: ${DB_DATABASE}`)
+  } catch (error) {
+    console.error('Erro ao conectar ao banco de dados:\n', error)
+    console.log('Inicialização do servidor foi cancelada')
+    process.exit(1) // Saída com código de erro
   }
 }
+
+export default connectDb
