@@ -3,8 +3,8 @@ import AuthService from '../../services/auth/authService'
 import AuthController from '../../controllers/auth/authController'
 import UserODM from '../../models/user/userODM'
 
-const model = UserODM
-const service = new AuthService(model)
+const instanceUserModel = UserODM
+const service = new AuthService(instanceUserModel)
 const controller = new AuthController(service)
 
 const authRouter = Router()
