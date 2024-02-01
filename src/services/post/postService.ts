@@ -9,7 +9,7 @@ class PostService {
     private readonly userODM: typeof UserODM
   ) {}
 
-  create = async (body: IPostIput, email: string): Promise<IPostOutput> => {
+  public createPost = async (body: IPostIput, email: string): Promise<IPostOutput> => {
     const { title, content } = validateBodyPost(body)
 
     if (email === undefined) throw new Error('401|Unauthorized')
@@ -31,7 +31,7 @@ class PostService {
     return newPost
   }
 
-  getAllPosts = async (): Promise<IPostOutput[]> => {
+  public getAllPosts = async (): Promise<IPostOutput[]> => {
     const posts = await this.postODM.getAllPosts()
 
     if (posts === null) throw new Error('404|Posts not found')
@@ -39,7 +39,7 @@ class PostService {
     return posts
   }
 
-  getPostById = async (id: string): Promise<IPostOutput> => {
+  public getPostById = async (id: string): Promise<IPostOutput> => {
     const post = await this.postODM.getPostById(id)
 
     if (post === null) throw new Error('404|Posts not found')
@@ -47,7 +47,7 @@ class PostService {
     return post
   }
 
-  updatePost = async (id: string, email: string, body: IPostIput): Promise<IPostOutput | null> => {
+  public updatePost = async (id: string, email: string, body: IPostIput): Promise<IPostOutput | null> => {
     const { content, title } = validateBodyPost(body)
 
     if (email === undefined) throw new Error('401|Unauthorized')
@@ -65,7 +65,7 @@ class PostService {
     return updatePost
   }
 
-  deletePost = async (id: string, email: string): Promise<IPostOutput | null> => {
+  public deletePost = async (id: string, email: string): Promise<IPostOutput | null> => {
     if (email === undefined) throw new Error('401|Unauthorized')
 
     const getUserForEmail = await this.userODM.getUserByEmail(email)
