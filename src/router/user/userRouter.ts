@@ -10,7 +10,7 @@ const controller = new UserController(service)
 
 const userRouter = Router()
 
-userRouter.post('/users', controller.create)
+userRouter.post('/users', controller.createUser)
 userRouter.get('/users/:id', controller.getUserById)
 userRouter.delete('/users/:id', validateToken, controller.getUserAndDelete)
 userRouter.put('/users/:id', validateToken, controller.getUserAndUpdate)
