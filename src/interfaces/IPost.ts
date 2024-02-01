@@ -21,9 +21,11 @@ interface IPostOutput {
 }
 
 interface IPostController {
-  create: (req: Request, res: Response) => void
+  createPost: (req: Request, res: Response) => void
   getAllPosts: (req: Request, res: Response) => void
   getPostById: (req: Request, res: Response) => void
+  updatePost: (req: Request, res: Response) => void
+  deletePost: (req: Request, res: Response) => void
 }
 
 export type {
