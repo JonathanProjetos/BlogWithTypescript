@@ -6,7 +6,9 @@ import encripty from '../../helper/encrypt'
 class UserService {
   constructor (private readonly userODM: typeof UserODM) {}
 
-  create = async (body: IUser): Promise<IUser> => {
+  public createUser = async (body: IUser): Promise<IUser> => {
+    console.log(body)
+
     let { email, password, displayName } = validateBodyUser(body)
 
     const isUser = await this.userODM.getUserByEmail(body.email)
@@ -25,7 +27,7 @@ class UserService {
     return user
   }
 
-  getUserById = async (id: string): Promise<IUser | null> => {
+  public getUserById = async (id: string): Promise<IUser | null> => {
     const isUser = await this.userODM.getUserById(id)
 
     if (isUser === undefined) throw new Error('404|User not found')
@@ -33,7 +35,7 @@ class UserService {
     return isUser
   }
 
-  getUserAndDelete = async (id: string, userEmail: string): Promise<IUser | null> => {
+  public getUserAndDelete = async (id: string, userEmail: string): Promise<IUser | null> => {
     if (userEmail === undefined) throw new Error('401|Unauthorized')
 
     const isUser = await this.userODM.getUserByEmail(userEmail)
@@ -47,7 +49,7 @@ class UserService {
     return resolve
   }
 
-  getUserAndUpdate = async (id: string, userEmail: string, body: IUser): Promise<IUser | null> => {
+  public getUserAndUpdate = async (id: string, userEmail: string, body: IUser): Promise<IUser | null> => {
     let { email, password, displayName } = validateBodyUser(body)
 
     if (userEmail === undefined) throw new Error('401|Unauthorized')
