@@ -4,7 +4,7 @@ import type AuthService from '../../services/auth/authService'
 class AuthController {
   constructor (private readonly authService: AuthService) {}
 
-  public async login (req: Request, res: Response): Promise<Response> {
+  public login = async (req: Request, res: Response): Promise<Response> => {
     const { email, password } = req.body
     const token = await this.authService.login({ email, password })
     return res.status(200).json({ token })
