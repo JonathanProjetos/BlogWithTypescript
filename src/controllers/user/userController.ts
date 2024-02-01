@@ -1,11 +1,11 @@
 import { type Request, type Response } from 'express'
 import type UserService from '../../services/user/userService'
-import type IUserController from '../../interfaces/IUserController'
+import type { IUserController } from '../../interfaces/IUser'
 
 class UserController implements IUserController {
   constructor (private readonly userService: UserService) {}
 
-  create = async (req: Request, res: Response): Promise<Response> => {
+  public async createUser (req: Request, res: Response): Promise<Response> {
     const { email, password, displayName } = req.body
 
     const user = await this.userService.create({ email, password, displayName })
@@ -13,7 +13,7 @@ class UserController implements IUserController {
     return res.status(201).json(user)
   }
 
-  getUserById = async (req: Request, res: Response): Promise<Response> => {
+  public async getUserById (req: Request, res: Response): Promise<Response> {
     const { id } = req.params
 
     const userById = await this.userService.getUserById(id)
@@ -21,7 +21,7 @@ class UserController implements IUserController {
     return res.status(200).json(userById)
   }
 
-  getUserAndDelete = async (req: Request, res: Response): Promise<Response> => {
+  public async getUserAndDelete (req: Request, res: Response): Promise<Response> {
     const { id } = req.params
     const { userEmail } = req.body
 
@@ -30,7 +30,7 @@ class UserController implements IUserController {
     return res.status(200).json(result)
   }
 
-  getUserAndUpdate = async (req: Request, res: Response): Promise<Response> => {
+  public async getUserAndUpdate (req: Request, res: Response): Promise<Response> {
     const { id } = req.params
     const { email, password, displayName, userEmail } = req.body
 
