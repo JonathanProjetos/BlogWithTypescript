@@ -3,44 +3,44 @@ import type PostService from '../../services/post/postService'
 import { type IPostController } from '../../interfaces/IPost'
 
 class PostController implements IPostController {
-  constructor (private readonly postservice: PostService) {}
+  constructor (private readonly postService: PostService) {}
 
-  public async createPost (req: Request, res: Response): Promise<Response> {
+  public createPost = async (req: Request, res: Response): Promise<Response> => {
     const { title, content, userEmail } = req.body
 
-    const result = await this.postservice.create({ title, content }, userEmail as string)
+    const result = await this.postService.createPost({ title, content }, userEmail as string)
 
     return res.status(201).json(result)
   }
 
-  public async getAllPosts (_req: Request, res: Response): Promise<Response> {
-    const result = await this.postservice.getAllPosts()
+  public getAllPosts = async (_req: Request, res: Response): Promise<Response> => {
+    const result = await this.postService.getAllPosts()
 
     return res.status(200).json(result)
   }
 
-  public async getPostById (req: Request, res: Response): Promise<Response> {
+  public getPostById = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params
 
-    const result = await this.postservice.getPostById(id)
+    const result = await this.postService.getPostById(id)
 
     return res.status(200).json(result)
   }
 
-  public async updatePost (req: Request, res: Response): Promise<Response> {
+  public updatePost = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params
     const { title, content, userEmail } = req.body
 
-    const result = await this.postservice.updatePost(id, userEmail as string, { title, content })
+    const result = await this.postService.updatePost(id, userEmail as string, { title, content })
 
     return res.status(200).json(result)
   }
 
-  public async deletePost (req: Request, res: Response): Promise<Response> {
+  public deletePost = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params
     const { userEmail } = req.body
 
-    const result = await this.postservice.deletePost(id, userEmail as string)
+    const result = await this.postService.deletePost(id, userEmail as string)
 
     return res.status(200).json(result)
   }
