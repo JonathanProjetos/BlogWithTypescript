@@ -1,60 +1,48 @@
 import express from 'express'
 import 'dotenv/config'
 import 'express-async-errors'
-import { Connection } from './config/connection'
+import connectDb from './config/connection'
 import userRouter from './router/user/userRouter'
 import authRouter from './router/auth/authRouter'
 import postRouter from './router/post/postRouter'
 import swagger from 'swagger-ui-express'
 import swaggerDocument from './doc/swagger.json'
 
-class App {
-  app: express.Express
-  readonly PORT: string | undefined = process.env.PORT
-  readonly connection: Connection
+const app: express.Express = express()
 
-  constructor () {
-    this.app = express()
-    this.app.use(express.json())
+const PORT: string | undefined = process.env.PORT
 
-    this.connection = new Connection()
+app.use(express.json())
 
-    this.app.use('/doc', swagger.serve, swagger.setup(swaggerDocument))
-    this.app.use('/', userRouter)
-    this.app.use('/', authRouter)
-    this.app.use('/', postRouter)
+app.use('/doc', swagger.serve, swagger.setup(swaggerDocument))
 
-    this.handleError()
+app.use('/', userRouter)
+app.use('/', authRouter)
+app.use('/', postRouter)
+
+app.use((
+  err: Error,
+  _req: express.Request,
+  res: express.Response,
+  _next: express.NextFunction
+) => {
+  const [status, message] = err.message.split('|')
+  if (err.message.split('').includes('|')) {
+    res.status(Number(status)).json({ error: message })
+  } else {
+    console.error('Error não Mapeado: ', err)
+    console.error('Error não Mapeado: ', err.message)
+    res.status(500).json({ error: err.message })
   }
+})
 
-  private handleError (): void {
-    this.app.use((
-      err: Error,
-      _req: express.Request,
-      res: express.Response,
-      _next: express.NextFunction
-    ) => {
-      const [status, message] = err.message.split('|')
-      if (err.message.split('').includes('|')) {
-        res.status(Number(status)).json({ error: message })
-      } else {
-        console.error('Error não Mapeado: ', err)
-        console.error('Error não Mapeado: ', err.message)
-        res.status(500).json({ error: err.message })
-      }
-    })
-  }
-
-  public start (): void {
-    try {
-      this.app.listen(this.PORT, () => {
-        console.log(`Servidor rodando na porta ${this.PORT}`)
-      })
-    } catch (err) {
-      console.error(err)
-    }
-  }
-}
-
-const server = new App()
-server.start()
+connectDb().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`)
+  })
+}).catch((err: any) => {
+  console.log('Erro ao conectar ao banco de dados err:\r\n')
+  console.error(err)
+  console.log('\r\nInicialização do servidor foi cancelada')
+  process.exit(0)
+})
