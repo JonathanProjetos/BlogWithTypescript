@@ -6,7 +6,7 @@ class UserODM {
   private readonly schema: Schema<IUser>
   private readonly model: Model<IUser>
 
-  private constructor () {
+  constructor () {
     this.schema = new Schema<IUser>({
       email: {
         type: String,
