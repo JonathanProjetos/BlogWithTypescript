@@ -1,13 +1,13 @@
 import type UserODM from '../../models/user/userODM'
 import { type IAuthInput } from '../../interfaces/IAuth'
-import { validateInputAuth } from '../../middlewares/joiInputDataAuth'
+import { validateInputAuth } from '../../middlewares/joiBodyAuth'
 import bcryptJs from 'bcryptjs'
 import { generateToken } from '../../middlewares/token'
 
 class AuthService {
   constructor (private readonly userODM: typeof UserODM) {}
 
-  login = async (body: IAuthInput): Promise<string | null> => {
+  public login = async (body: IAuthInput): Promise<string | null> => {
     const { email, password } = validateInputAuth(body)
 
     const isUser = await this.userODM.getUserByEmail(email)
