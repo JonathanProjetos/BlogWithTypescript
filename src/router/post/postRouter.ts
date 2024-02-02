@@ -7,9 +7,9 @@ import { validateToken } from '../../middlewares/decodedToken'
 
 const postRouter = Router()
 
-const instanceUserModel = UserODM
-const modelPost = new PostODM()
-const service = new PostService(modelPost, instanceUserModel)
+const instanceUserODM = UserODM
+const instancePostODM = PostODM
+const service = new PostService(instancePostODM, instanceUserODM)
 const controller = new PostController(service)
 
 postRouter.post('/posts', validateToken, controller.createPost)
