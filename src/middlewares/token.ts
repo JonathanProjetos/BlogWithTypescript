@@ -5,7 +5,7 @@ const secret = process.env.JWT_SECRET
 
 const generateToken = (email: string): string => {
   if (secret === null || secret === undefined) {
-    throw new Error('404|payload is not difined')
+    throw new Error('404|JWT_SECRET is not difined')
   }
   const token = sign({ email }, secret, {
     expiresIn: '1d',
