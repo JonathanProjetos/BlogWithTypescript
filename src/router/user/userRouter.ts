@@ -12,7 +12,7 @@ const userRouter = Router()
 
 userRouter.post('/users', controller.createUser)
 userRouter.get('/users/:id', controller.getUserById)
-userRouter.delete('/users/:id', validateToken, controller.getUserAndDelete)
-userRouter.put('/users/:id', validateToken, controller.getUserAndUpdate)
+userRouter.delete('/users/:id', validateToken, controller.deleteUser)
+userRouter.put('/users/:id', validateToken, controller.updateUser)
 
 export default userRouter
