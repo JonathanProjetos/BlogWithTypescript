@@ -21,20 +21,20 @@ class UserController implements IUserController {
     return res.status(200).json(userById)
   }
 
-  public getUserAndDelete = async (req: Request, res: Response): Promise<Response> => {
+  public deleteUser = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params
     const { userEmail } = req.body
 
-    const result = await this.userService.getUserAndDelete(id, userEmail as string)
+    const result = await this.userService.deleteUser(id, userEmail as string)
 
     return res.status(200).json(result)
   }
 
-  public getUserAndUpdate = async (req: Request, res: Response): Promise<Response> => {
+  public updateUser = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params
     const { email, password, displayName, userEmail } = req.body
 
-    const result = await this.userService.getUserAndUpdate(
+    const result = await this.userService.updateUser(
       id,
       userEmail as string,
       { email, password, displayName })
