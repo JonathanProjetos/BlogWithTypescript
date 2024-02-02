@@ -90,7 +90,7 @@ describe('Teste da classe UserODM', () => {
 
       const modelStub = sinon.stub(Model, 'findByIdAndDelete').resolves(user as IUser)
 
-      const result = await userODM.deleteUser(user.id)
+      const result = await userODM.getUserAndDelete(user.id)
 
       expect(result).to.deep.equal(user)
       expect(result).to.keys('id', 'email', 'password', 'displayName')
@@ -108,7 +108,7 @@ describe('Teste da classe UserODM', () => {
       const modelStub = sinon.stub(Model, 'findOneAndUpdate').resolves(user as IUser)
 
       const _id = user.id
-      const result = await userODM.updateUser(user, _id)
+      const result = await userODM.getUserAndUpdate(user, _id)
 
       expect(result).to.deep.equal(user)
       expect(modelStub.calledOnce).to.be.true
