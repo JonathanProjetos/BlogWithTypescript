@@ -56,11 +56,11 @@ class UserODM {
     return await this.model.find()
   }
 
-  public async deleteUser (id: string): Promise<IUser | null> {
+  public async getUserAndDelete (id: string): Promise<IUser | null> {
     return await this.model.findByIdAndDelete({ _id: id }, { new: true })
   }
 
-  public async updateUser (body: IUser, id: string): Promise<IUser | null> {
+  public async getUserAndUpdate (body: IUser, id: string): Promise<IUser | null> {
     const {
       email,
       password,
