@@ -73,17 +73,17 @@ describe('Teste da classe UserService', () => {
     })
   })
 
-  describe('Testando a função getUserAndDelete', () => {
+  describe('Testando a função deleteUser', () => {
     afterEach(() => sinon.restore())
 
     it('Deve deletar um usuário com sucesso', async () => {
       sinon.stub(userODM, 'getUserByEmail').resolves(userOutput)
-      sinon.stub(userODM, 'deleteUser').resolves(userOutput)
+      sinon.stub(userODM, 'getUserAndDelete').resolves(userOutput)
 
       const userEmail = 'test@test.com'
       const id = '123456'
 
-      const result = await userService.getUserAndDelete(id, userEmail)
+      const result = await userService.deleteUser(id, userEmail)
 
       expect(result).to.be.equal(userOutput)
     })
@@ -93,7 +93,7 @@ describe('Teste da classe UserService', () => {
       const id = '123456'
 
       try {
-        await userService.getUserAndDelete(id, userEmail)
+        await userService.deleteUser(id, userEmail)
       } catch (err: any) {
         expect(err.message).to.be.equal('401|Unauthorized')
       }
@@ -106,7 +106,7 @@ describe('Teste da classe UserService', () => {
       const id = '123456'
 
       try {
-        await userService.getUserAndDelete(id, userEmail)
+        await userService.deleteUser(id, userEmail)
       } catch (err: any) {
         expect(err.message).to.be.equal('404|User not found')
       }
@@ -119,14 +119,14 @@ describe('Teste da classe UserService', () => {
       const id = '12345'
 
       try {
-        await userService.getUserAndDelete(id, userEmail)
+        await userService.deleteUser(id, userEmail)
       } catch (err: any) {
         expect(err.message).to.be.equal('401|Unauthorized')
       }
     })
   })
 
-  describe('Testando a função getUserAndUpdate', () => {
+  describe('Testando a função updateUser', () => {
     afterEach(() => sinon.restore())
 
     const updatedInputUser = {
@@ -138,12 +138,12 @@ describe('Teste da classe UserService', () => {
     it('Deve ser possivel atualizar um usuário com sucesso', async () => {
       sinon.stub(userODM, 'getUserByEmail').resolves(userOutput)
       sinon.stub(userODM, 'getAllUsers').resolves([userOutput])
-      sinon.stub(userODM, 'updateUser').resolves(userOutput)
+      sinon.stub(userODM, 'getUserAndUpdate').resolves(userOutput)
 
       const id = '123456'
       const userEmail = 'test@test.com'
 
-      const result = await userService.getUserAndUpdate(id, userEmail, updatedInputUser)
+      const result = await userService.updateUser(id, userEmail, updatedInputUser)
 
       expect(result).to.be.equal(userOutput)
     })
@@ -153,7 +153,7 @@ describe('Teste da classe UserService', () => {
       const userEmail = ''
 
       try {
-        await userService.getUserAndUpdate(id, userEmail, updatedInputUser)
+        await userService.updateUser(id, userEmail, updatedInputUser)
       } catch (err: any) {
         expect(err.message).to.be.equal('401|Unauthorized')
       }
@@ -166,7 +166,7 @@ describe('Teste da classe UserService', () => {
       const userEmail = 'test@test.com'
 
       try {
-        await userService.getUserAndUpdate(id, userEmail, updatedInputUser)
+        await userService.updateUser(id, userEmail, updatedInputUser)
       } catch (err: any) {
         expect(err.message).to.be.equal('404|User not found')
       }
@@ -180,7 +180,7 @@ describe('Teste da classe UserService', () => {
       const userEmail = 'test@test.com'
 
       try {
-        await userService.getUserAndUpdate(id, userEmail, userInput)
+        await userService.updateUser(id, userEmail, userInput)
       } catch (err: any) {
         expect(err.message).to.be.equal('409|Email already registered')
       }
