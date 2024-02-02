@@ -5,16 +5,16 @@ import { type IPostIput, type IPostOutput } from '../../interfaces/IPost'
 
 class PostService {
   constructor (
-    private readonly postODM: PostODM,
+    private readonly postODM: typeof PostODM,
     private readonly userODM: typeof UserODM
   ) {}
 
-  public createPost = async (body: IPostIput, email: string): Promise<IPostOutput> => {
+  public createPost = async (body: IPostIput, userEmail: string): Promise<IPostOutput> => {
     const { title, content } = validateBodyPost(body)
 
-    if (email === undefined) throw new Error('401|Unauthorized')
+    if (userEmail === undefined || userEmail.length === 0) throw new Error('401|Unauthorized')
 
-    const isUser = await this.userODM.getUserByEmail(email)
+    const isUser = await this.userODM.getUserByEmail(userEmail)
 
     if (isUser === null) throw new Error('404|User is not registered')
 
@@ -40,6 +40,8 @@ class PostService {
   }
 
   public getPostById = async (id: string): Promise<IPostOutput> => {
+    if (id === undefined || id.length === 0) throw new Error('404|Unable to locate user id')
+
     const post = await this.postODM.getPostById(id)
 
     if (post === null) throw new Error('404|Posts not found')
@@ -47,12 +49,14 @@ class PostService {
     return post
   }
 
-  public updatePost = async (id: string, email: string, body: IPostIput): Promise<IPostOutput | null> => {
+  public updatePost = async (id: string, userEmail: string, body: IPostIput): Promise<IPostOutput | null> => {
     const { content, title } = validateBodyPost(body)
 
-    if (email === undefined) throw new Error('401|Unauthorized')
+    if (id === undefined || id.length === 0 ) throw new Error('404|Unable to locate user ID')
 
-    const getUserForEmail = await this.userODM.getUserByEmail(email)
+    if (userEmail === undefined || userEmail.length === 0) throw new Error('401|Unauthorized')
+
+    const getUserForEmail = await this.userODM.getUserByEmail(userEmail)
 
     if (getUserForEmail === null) throw new Error('404|User is not registered')
 
@@ -66,7 +70,10 @@ class PostService {
   }
 
   public deletePost = async (id: string, email: string): Promise<IPostOutput | null> => {
-    if (email === undefined) throw new Error('401|Unauthorized')
+    
+    if(id === undefined || id.length === 0)throw new Error('404|Unable to locate user ID')
+
+    if (email === undefined || email.length === 0) throw new Error('401|Unauthorized')
 
     const getUserForEmail = await this.userODM.getUserByEmail(email)
 
