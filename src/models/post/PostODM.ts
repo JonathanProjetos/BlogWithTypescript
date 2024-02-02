@@ -39,7 +39,7 @@ class PostODM {
       userId
     })
 
-    return createdPost.toObject() as IPostOutput
+    return createdPost as unknown as IPostOutput
   }
 
   public async getAllPosts (): Promise<IPostOutput[] | null> {
