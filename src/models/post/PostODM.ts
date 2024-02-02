@@ -4,6 +4,7 @@ import type { IPostOutput, IPostIputWithIdUser, IPostIput } from '../../interfac
 class PostODM {
   private readonly schema: Schema<IPostIputWithIdUser>
   private readonly model: Model<IPostIputWithIdUser>
+  private static instance: PostODM
 
   constructor () {
     this.schema = new Schema<IPostIputWithIdUser>({
@@ -30,6 +31,11 @@ class PostODM {
 
     this.model = model<IPostIputWithIdUser>('post', this.schema)
   }
+
+  public static getInstance(): PostODM {
+    PostODM.instance = new PostODM()
+    return PostODM.instance
+  } 
 
   public async create (post: IPostIputWithIdUser): Promise<IPostOutput> {
     const { content, title, userId } = post
@@ -69,4 +75,4 @@ class PostODM {
   }
 }
 
-export default PostODM
+export default PostODM.getInstance()
