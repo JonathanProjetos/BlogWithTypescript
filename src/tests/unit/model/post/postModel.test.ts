@@ -22,7 +22,7 @@ describe('Teste da classe PostODM', () => {
     userId: 'af45a45f5a4f56a4f65a'
   }
 
-  const postODM = new PostODM();
+  const postODM = PostODM;
 
   describe('Testando a função create', () => {
     afterEach(() => sinon.restore())
