@@ -15,8 +15,8 @@ interface IUserResponseDelete {
 interface IUserController {
   createUser: (req: Request, res: Response) => void
   getUserById: (req: Request, res: Response) => void
-  getUserAndDelete: (req: Request, res: Response) => void
-  getUserAndUpdate: (req: Request, res: Response) => void
+  deleteUser: (req: Request, res: Response) => void
+  updateUser: (req: Request, res: Response) => void
 }
 
 export type {
