@@ -7,7 +7,8 @@
     "test": "ts-mocha --exit src/tests/**/*.ts",
     "test:coverage": "tsc && nyc --all --include dist/models --include dist/services --include dist/controllers mocha dist/tests/unit/**/*.js --exit",
     "start": "ts-node src/index.ts",
-    "dev": "ts-node-dev src/index.ts"
+    "dev": "ts-node-dev src/index.ts",
+    "lint": "eslint ./src --ext .ts"
   },
   "keywords": [],
   "author": "",
