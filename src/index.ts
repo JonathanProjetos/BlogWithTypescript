@@ -7,6 +7,7 @@ import authRouter from './router/auth/authRouter'
 import postRouter from './router/post/postRouter'
 import swagger from 'swagger-ui-express'
 import swaggerDocument from './doc/swagger.json'
+import errorLauncher from './middlewares/errorLauncher'
 
 const app: express.Express = express()
 
@@ -20,21 +21,7 @@ app.use('/', userRouter)
 app.use('/', authRouter)
 app.use('/', postRouter)
 
-app.use((
-  err: Error,
-  _req: express.Request,
-  res: express.Response,
-  _next: express.NextFunction
-) => {
-  const [status, message] = err.message.split('|')
-  if (err.message.split('').includes('|')) {
-    res.status(Number(status)).json({ error: message })
-  } else {
-    console.error('Error não Mapeado: ', err)
-    console.error('Error não Mapeado: ', err.message)
-    res.status(500).json({ error: err.message })
-  }
-})
+app.use(errorLauncher)
 
 connectDb().then(() => {
   app.listen(PORT, () => {
